@@ -87,3 +87,52 @@ podman run -d --name test-httpd -p 8280:80 ${RHT_OCP4_QUAY_USER}/do180-custom-ht
 
 curl localhost:8280/do180.html
 
+# 18
+vim /home/student/DO180/labs/dockerfile-create/Containerfile
+cd /home/student/DO180/labs/dockerfile-create
+podman build --layers=false -t do180/apache .
+> layers false deletes intermediate images
+podman images
+podman run -d --name lab-apache -p 10080:80 do180/apache
+podman ps
+curl 127.0.0.1:10080
+
+# 21
+oc login -u ${RHT_OCP4_DEV_USER} -p ${RHT_OCP4_DEV_PASSWORD} {RHT_OCP4_MASTER_API}
+oc new-project ${RHT_OCP4_DEV_USER}-mysql-openshift
+
+oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_ROOT_PASSWORD=r00tpa55 -p MYSQL_DATABASE=testdb -p VOLUME_CAPACITY=10Gi
+
+oc status
+oc get all
+oc get pods
+oc get pods -w
+oc get svc
+oc get pvc
+oc describe pod mysql-1
+oc describe svc/mysql-1
+oc describe pvc/mysql-1
+oc port-forward mysql-1 3306:3306
+mysql -uuser1 -pmypa55 --protocol tcp -h localhost
+oc delete project ${RHT_OCP4_DEV_USER}-mysql-openshift
+
+# 22
+oc expose svc/php-helloworld
+oc describe route
+oc delete route/php-helloworld
+
+# Misc
+oc get <resource_type> <resource_name> -o yaml
+oc get -is -n openshift
+oc get svc, deployments -l app=nexus
+oc get builds
+oc get bc
+oc edit
+oc exec <container_id>
+oc logs build/myapp-1
+oc start-build myapp
+
+
+
+
+
