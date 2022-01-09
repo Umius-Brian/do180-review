@@ -105,33 +105,62 @@ oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=myp
 
 oc status
 oc get all
+oc get all --selector app=php-helloworld -o name
 oc get pods
 oc get pods -w
 oc get svc
 oc get pvc
+oc get route
+oc get route/temps
+oc get route -o jsonpath='{..spec.host}{"\n"}'
+oc get <resource_type> <resource_name> -o yaml
+oc get -is -n openshift
+oc get svc, deployments -l app=nexus
+oc get builds
+oc get bc
 oc describe pod mysql-1
 oc describe svc/mysql-1
 oc describe pvc/mysql-1
+oc describe deployment/mysql-1
 oc port-forward mysql-1 3306:3306
 mysql -uuser1 -pmypa55 --protocol tcp -h localhost
 oc delete project ${RHT_OCP4_DEV_USER}-mysql-openshift
 
 # 22
 oc expose svc/php-helloworld
+oc expose svc/php-helloworld --name helloo
 oc describe route
 oc delete route/php-helloworld
 
 # Misc
-oc get <resource_type> <resource_name> -o yaml
-oc get -is -n openshift
-oc get svc, deployments -l app=nexus
-oc get builds
-oc get bc
 oc edit
 oc exec <container_id>
 oc logs build/myapp-1
+oc logs --all-containers -f php-helloworld-1-build
+oc logs -f php-helloworld-2-build
+oc logs -f bc/temps
+
 oc start-build myapp
 
+# 25
+# When starting s2i, checkout from master in another branch and push
+oc new-app php:7.3 --name php-helloworld https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i --context-dir php-helloworld
+
+oc get pods
+oc logs --all-containers -f php-helloworld-1-build
+oc describe deployment/php-helloworld
+oc expose service php-helloworld --name ${RHT_OCP4_DEV_USER}-helloworld
+oc get route -o jsonpath='{..spec.host}{"\n"}'
+curl -s <route>
+
+# 27
+oc login
+oc new-project
+oc new-app
+oc logs -f bc/temps
+oc get pods -w
+oc expose svc/temps
+oc get route/temps
 
 
 

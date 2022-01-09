@@ -48,4 +48,4 @@ oc new-app https://github.com/openshift/ruby-hello-world.git#beta4
 
 oc new-app php~http://services.lab.example.com/app -o json --name=myapp > s2i.json
 
-
+oc new-app php:7.3 --name php-helloworld https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i --context-dir php-helloworld
