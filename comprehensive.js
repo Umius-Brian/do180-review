@@ -19,4 +19,13 @@ podman exec -it mysqldb-port /bin/bash
 bash-4.4$ mysql -uroot items -e "select * from items"
 > Interactive
 
+# Volume mount
+mkdir -pv /home/student/local/mysql
+sudo semanage fcontext -a -t container_file_t '/home/student/local/mysql(/.*)?'
+sudo restorecon -R /home/student/local/mysql
+podman unshare chown -Rv 27:27 /home/student/local/mysql
+podman unshare ls -ldZ /home/student/local/mysql
+
+# Differences
+podman diff official-httpd
 

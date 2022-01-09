@@ -30,7 +30,7 @@ podman exec mysql /bin/bash -c 'mysql -uuser1 -pmypa55 items < /db.sql'
 podman exec mysql /bin/bash -c 'mysql -uuser1 -pmypa55 -e "select * from items.Projects;"'
 
 
-# 8
+# 9
 # First make local directory for volume mount
 mkdir -pv /home/student/local/mysql
 ls -ldZ /home/student/local/mysql
@@ -49,3 +49,41 @@ podman unshare ls -ld /home/student/local/mysql/items
 
 # 9
 podman run --name mysqldb-port -d -v /home/student/local/mysql:/var/lib/mysql/data -p 13306:3306 -e -e -e -e registry.redhat.io/rhel8/
+
+# 11
+podman login registry.redhat.io
+podman run
+podman ps
+mysql -uuser1 -pmypa55 -h 127.0.0.1 -P13306 items < /home/student/DO180/labs/manage-networking/db.sql
+
+mysql -uuser1 -pmypa55 -h 127.0.0.1 -P13306 items -e "select * from Item"
+
+podman exec -it mysqldb-port mysql -uroot items -e "select * from Item"
+
+podman exec -it mysqldb-port /bin/bash
+bash-4.4$ mysql -uroot items -e "select * from Items"
+
+# 12
+podman unshare chown -Rv 27:27 /home/student/local/mysql
+
+# 15
+podman login quay.io
+> brian_bui_ibm
+> same pw
+podman run 
+podman exec
+echo
+curl
+podman diff
+podman stop
+podman commit -a 'Brian' official-httpd do180-custom-httpd
+podman images
+podman login quay.io
+podman tag do180-custom-httpd quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+podman push quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+podman pull -q quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+> -q suppresses output info when pulling images
+podman run -d --name test-httpd -p 8280:80 ${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+
+curl localhost:8280/do180.html
+
