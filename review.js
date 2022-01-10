@@ -103,6 +103,8 @@ oc new-project ${RHT_OCP4_DEV_USER}-mysql-openshift
 
 oc new-app --template=mysql-persistent -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_ROOT_PASSWORD=r00tpa55 -p MYSQL_DATABASE=testdb -p VOLUME_CAPACITY=10Gi
 
+oc new-app -p -p -p -p
+
 oc status
 oc get all
 oc get all --selector app=php-helloworld -o name
