@@ -1,4 +1,4 @@
-# Run
+# Run MySQL
 podman run -d --rm -it -v /home/student/local/mysql:/var/lib/mysql/data -p 13306:3306 -e -e -e -e registry.redhat.io/rhel8/mysql-80:1
 
 # MySQL exec (from ~)
@@ -46,6 +46,12 @@ oc new-app http://github.com/openshift/sti-ruby.git --context-dir=2.0/test
 
 oc new-app https://github.com/openshift/ruby-hello-world.git#beta4
 
-oc new-app php~http://services.lab.example.com/app -o json --name=myapp > s2i.json
+oc new-app --name=myapp php~http://services.lab.example.com/app -o json > s2i.json
 
 oc new-app php:7.3 --name php-helloworld https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i --context-dir php-helloworld
+
+
+# Route
+oc expose svc/php-helloworld
+oc expose svc/php-helloworld --name=php-xyz
+oc describe route

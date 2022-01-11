@@ -164,6 +164,31 @@ oc get pods -w
 oc expose svc/temps
 oc get route/temps
 
+# 28
+ip -br addr list | grep eth0
+podman exec -it todoapi env 
+curl -w "\n" http:127.0.0.1:30080/todo/api/items/1
+
+# 29
+oc create -f todo-app.yaml
+oc status | grep -o "http:.*com"
+curl -w "\n" $(oc status | grep -o "http:.*com")/todo/api/items/1
+
+# 30
+oc get templates -n openshift
+oc get template mysql-persistent -n openshift -o yaml
+oc create -f todo-template.yaml -n openshfit
+oc describe template mysql-persistent -n openshift
+
+oc process -f mysql -o yaml -f mysql.yaml -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+oc get template mysql -o yaml -n openshift > mysql-template.yaml
+
+oc process -f mysql-template.yaml -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+oc process openshift//mysql-persistent -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+oc new-app --template=mysql-persistent -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank -p VOLUME_CAPACITY=10Gi
 
 
 
