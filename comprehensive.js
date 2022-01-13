@@ -55,3 +55,6 @@ oc new-app php:7.3 --name php-helloworld https://github.com/${RHT_OCP4_GITHUB_US
 oc expose svc/php-helloworld
 oc expose svc/php-helloworld --name=php-xyz
 oc describe route
+
+# Curl
+curl -w "\n" localhost:30080/todo/api/items/1

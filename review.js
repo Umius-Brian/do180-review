@@ -190,5 +190,24 @@ oc process openshift//mysql-persistent -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SS
 
 oc new-app --template=mysql-persistent -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank -p VOLUME_CAPACITY=10Gi
 
+oc new-app php:7.3 --name php-helloworld https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i --context-dir=php-helloworld
 
+# 32
+oc create -f quote-php-template.json
+THEN
+oc process php-template-persistent -p RHT_OCP4_QUAY_USER=${RHT_OCP4_QUAY_USER} | oc create -f -
 
+# 34
+oc new-app --name nodejs-hello -i nodejs:12 http://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#troubleshoot-s2i --context-dir=nodejs-helloworld --build-env npm_config_registry=http://${RHT_OCP4_NEXUS_SERVER}/repository/npm-proxy
+
+# 36
+podman logs -f troubleshoot-container
+
+# 37
+oc get pods -w
+oc logs -f bc/nodejs-dev
+sed -i s/4.20/4.x/ package.json
+
+# 38
+podman logs gifted_pike | grep JettyServer
+curl -v localhost:18081/nexus/ 2>&1 | grep -E 'HTTP|<title>'
